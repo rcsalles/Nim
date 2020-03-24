@@ -9,14 +9,14 @@ runForever should throw ValueError, this is expected
 import asyncdispatch
 
 proc failingAwaitable(p: int) {.async.} =
-  await sleepAsync(500)
+  await sleepAsync(100)
   if p > 0:
     raise newException(Exception, "my exception")
 
 proc main() {.async.} =
   let fut = failingAwaitable(1)
   try:
-    await fut or sleepAsync(100)
+    await fut or sleepAsync(50)
     if fut.finished:
       echo "finished"
     else:
