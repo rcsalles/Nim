@@ -1329,7 +1329,7 @@ proc typeSectionFinalPass(c: PContext, n: PNode) =
       else:
         while x.kind in {nkStmtList, nkStmtListExpr} and x.len > 0:
           x = x.lastSon
-        if x.kind notin {nkObjectTy, nkDistinctTy, nkEnumTy, nkEmpty} and
+        if x.kind notin {nkObjectTy, nkDistinctTy, nkEnumTy, nkEmpty, nkProcTy} and
             s.typ.skipTypes(abstractPtrs-{tyAlias}).kind notin {tyObject, tyEnum}:
           # type aliases are hard:
           var t = semTypeNode(c, x, nil)
@@ -1451,8 +1451,8 @@ proc semProcAnnotation(c: PContext, prc: PNode;
   var n = prc[pragmasPos]
   if n == nil or n.kind == nkEmpty: return
   for i in 0..<n.len:
-    var it = n[i]
-    var key = if it.kind in nkPragmaCallKinds and it.len >= 1: it[0] else: it
+    let it = n[i]
+    let key = if it.kind in nkPragmaCallKinds and it.len >= 1: it[0] else: it
 
     if whichPragma(it) != wInvalid:
       # Not a custom pragma
